@@ -14,11 +14,11 @@
                 <li>
                     <strong>{{ recipe.name }}</strong>  
                     <ul>
-                        {% for ingredient in recipe.ingredients %}
-                            <li>{{ ingredient.quantity }} - {{ ingredient.name }}</li>
+                        {% for ingredient in recipe.ingredients.all %}
+                            <li>{{ ingredient.quantity }} - {{ ingredient.ingredient.name }}</li>
                         {% endfor %}
                     </ul>
-                    <a href="{{ recipe.link }}">View Recipe</a>
+                    <a href="{% url 'recipe_detail' recipe.id %}">View Recipe</a>
                 </li>
             {% endfor %}
         </ul>
