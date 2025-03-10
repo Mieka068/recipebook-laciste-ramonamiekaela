@@ -7,21 +7,66 @@
     {% if recipes %}
         <ul>
             {% for recipe in recipes %}
-                <li>
-                    <strong>{{ recipe.name }}</strong>  
-                    <p><strong>By:</strong> {{ recipe.author.profile.name }}</p>  
+                <li class="recipe-item">
+                    <div class="recipe-info">
+                        <h3>{{ recipe.name }}</h3>  <!-- ✅ Bigger and bold recipe name -->
+                        <p class="author-name"><strong>By:</strong> {{ recipe.author.profile.name }}</p> <!-- ✅ Author below -->
+                    </div>
 
-                    <ul>
-                        {% for ingredient in recipe.ingredients.all %}
-                            <li>{{ ingredient.quantity }} - {{ ingredient.ingredient.name }}</li>
-                        {% endfor %}
-                    </ul>
-
-                    <a href="{{ recipe.get_absolute_url }}">View Recipe</a>
+                    <div class="view-button">
+                        <a href="{{ recipe.get_absolute_url }}" class="btn">View Recipe</a> <!-- ✅ Styled button -->
+                    </div>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No recipes found.</p>
     {% endif %}
+
+    <style>
+        /* Style for each recipe list item */
+        .recipe-item {
+            display: flex;
+            justify-content: space-between; /* ✅ Aligns name & button properly */
+            align-items: center;
+            background: #f1f1f1;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        /* Bigger and bolder recipe names */
+        h3 {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* Author name style */
+        .author-name {
+            font-size: 16px;
+            color: #666;
+            margin: 5px 0 0;
+        }
+
+        /* Button styling */
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        /* Align button to the right */
+        .view-button {
+            margin-left: auto;
+        }
+    </style>
 {% endblock %}

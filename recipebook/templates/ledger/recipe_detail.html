@@ -1,21 +1,121 @@
 {% extends "base.html" %}
 
 {% block title %}Recipe Detail{% endblock %}
-{% block page_title %}Recipe Detail{% endblock %}
+
+{% block page_title %}
+    <h2 class="recipe-subtitle">Recipe Detail</h2>  
+{% endblock %}
 
 {% block content %}
-    <h2>{{ recipe.name }}</h2>
-    <p><strong>By:</strong> {{ recipe.author.profile.name }}</p>
-    <p><strong>Created on:</strong> {{ recipe.created_on }}</p>
-    <p><strong>Updated on:</strong> {{ recipe.updated_on }}</p>
+    <!-- Recipe Title -->
+    <h1 class="recipe-title">{{ recipe.name }}</h1>
+    <p class="author-name"><strong>By:</strong> {{ recipe.author.profile.name }}</p>
 
-    <ul>
-        {% for ingredient in recipe.ingredients.all %}
-            <li>{{ ingredient.ingredient.name }} - {{ ingredient.quantity }}</li>
-        {% empty %}
-            <li>No ingredients listed.</li>
-        {% endfor %}
-    </ul>
+    {% load tz %} 
 
-    <a href="{% url 'ledger:recipe_list' %}">Back to Recipes</a>
+    <!-- Created and Updated Time (formatted properly) -->
+    <div class="time-info">
+        <p><strong>Created on:</strong> {% timezone "Asia/Manila" %}{{ recipe.created_on|date:"F j, Y g:i A" }}{% endtimezone %}</p>
+        <p><strong>Updated on:</strong> {% timezone "Asia/Manila" %}{{ recipe.updated_on|date:"F j, Y g:i A" }}{% endtimezone %}</p>
+    </div>
+
+    <!-- Two-column layout for Ingredients & Quantity -->
+    <div class="ingredient-container">
+        <div class="column">
+            <h3>Ingredient</h3>
+            <ul>
+                {% for ingredient in recipe.ingredients.all %}
+                    <li>{{ ingredient.ingredient.name }}</li>
+                {% empty %}
+                    <li>No ingredients listed.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="column">
+            <h3>Quantity</h3>
+            <ul>
+                {% for ingredient in recipe.ingredients.all %}
+                    <li>{{ ingredient.quantity }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Back to Recipes Button -->
+    <a href="{% url 'ledger:recipe_list' %}" class="btn">Back to Recipes</a>
+
+    <style>
+        /* "Recipe Detail" Text Styling */
+        .recipe-subtitle {
+            color: #888; 
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Recipe Title Styling */
+        .recipe-title {
+            font-size: 32px;  
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        /* Author Name */
+        .author-name {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Created & Updated Timestamps (Formatted & Aligned) */
+        .time-info {
+            display: flex;
+            justify-content: space-between; 
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        /* Two-column layout for ingredients */
+        .ingredient-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 50px;
+            padding: 0 20px;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .column h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Button Styling */
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+
 {% endblock %}
