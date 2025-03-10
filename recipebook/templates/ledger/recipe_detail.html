@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe Detail{% endblock %}
+{% block page_title %}Recipe Detail{% endblock %}
+
+{% block content %}
+    <h2>{{ recipe.name }}</h2>
+    <p><strong>By:</strong> {{ recipe.author.profile.name }}</p>
+    <p><strong>Created on:</strong> {{ recipe.created_on }}</p>
+    <p><strong>Updated on:</strong> {{ recipe.updated_on }}</p>
+
+    <ul>
+        {% for ingredient in recipe.ingredients.all %}
+            <li>{{ ingredient.ingredient.name }} - {{ ingredient.quantity }}</li>
+        {% empty %}
+            <li>No ingredients listed.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'ledger:recipe_list' %}">Back to Recipes</a>
+{% endblock %}
