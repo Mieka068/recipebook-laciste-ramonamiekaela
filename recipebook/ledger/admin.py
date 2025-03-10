@@ -9,6 +9,7 @@ class RecipeIngredientInline(admin.TabularInline):
 
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [RecipeIngredientInline]
+    list_display = ('name', 'author', 'created_on', 'updated_on')
 
 
 class ProfileInline(admin.StackedInline):
