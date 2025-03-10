@@ -3,9 +3,11 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from .models import Recipe, Ingredient, RecipeIngredient, Profile
 
+
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
     extra = 1
+
 
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [RecipeIngredientInline]
