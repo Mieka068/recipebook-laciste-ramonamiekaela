@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe List{% endblock %}
+{% block page_title %}Recipe List{% endblock %}
+
+{% block content %}
+    {% if recipes %}
+        <ul>
+            {% for recipe in recipes %}
+                <li>
+                    <strong>{{ recipe.name }}</strong>  
+                    <p><strong>By:</strong> {{ recipe.author.profile.name }}</p>  
+
+                    <ul>
+                        {% for ingredient in recipe.ingredients.all %}
+                            <li>{{ ingredient.quantity }} - {{ ingredient.ingredient.name }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <a href="{{ recipe.get_absolute_url }}">View Recipe</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recipes found.</p>
+    {% endif %}
+{% endblock %}
