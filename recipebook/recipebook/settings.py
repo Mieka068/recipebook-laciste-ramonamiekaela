@@ -15,6 +15,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Internationalization
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'Asia/Manila'  
+
+USE_I18N = True
+USE_TZ = True  
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
