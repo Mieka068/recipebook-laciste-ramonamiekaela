@@ -11,20 +11,35 @@
         {{ form.as_p }}
 
         <h3>Ingredients</h3>
-        {{ formset.management_form }}
-        {% for form in formset %}
-            <div class="ingredient-form">
-                {{ form.as_p }}
-            </div>
-        {% endfor %}
+        {{ ingredient_formset.management_form }}
+        <div id="ingredient-forms">
+            {% for form in ingredient_formset %}
+                <div class="ingredient-form">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
 
+        <button type="button" id="add-ingredient-btn" class="btn">Add Another Ingredient</button>
         <button type="submit" class="btn">Save Recipe</button>
     </form>
 
     <a href="{% url 'ledger:recipe_list' %}" class="btn">Back to Recipe List</a>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let formIdx = {{ ingredient_formset.total_form_count }};
+            document.getElementById("add-ingredient-btn").addEventListener("click", function() {
+                let newForm = document.querySelectorAll(".ingredient-form")[0].cloneNode(true);
+                let regex = new RegExp("-" + (formIdx - 1) + "-", "g");
+                newForm.innerHTML = newForm.innerHTML.replace(regex, "-" + formIdx + "-");
+                document.getElementById("ingredient-forms").appendChild(newForm);
+                formIdx++;
+            });
+        });
+    </script>
+
     <style>
-        /* Centering Form */
         form {
             display: flex;
             flex-direction: column;
@@ -33,7 +48,6 @@
             margin: auto;
         }
 
-        /* Ingredients Styling */
         .ingredient-form {
             background: #f8f9fa;
             padding: 10px;
@@ -46,7 +60,6 @@
             color: #007bff;
         }
 
-        /* Submit Button */
         .btn {
             display: block;
             width: fit-content;
