@@ -9,9 +9,14 @@
 {% block content %}
     <!-- Recipe Title -->
     <h1 class="recipe-title">{{ recipe.name }}</h1>
-    <p class="author-name"><strong>By:</strong> {{ recipe.author.profile.name }}</p>
+    {% if recipe.author.profile.name %}
+        <p class="author-name"><strong>By:</strong> {{ recipe.author.profile.name }}</p>
+    {% else %}
+        <p class="author-name"><strong>By:</strong> {{ recipe.author.username }}</p>
+    {% endif %}
 
     {% load tz %} 
+    {% load static %}
 
     <!-- Created and Updated Time -->
     <div class="time-info">
@@ -21,7 +26,6 @@
 
     <!-- Display Recipe Images -->
     {% if recipe.images.all %}
-        <h3>Recipe Images</h3>
         <div class="image-gallery">
             {% for image in recipe.images.all %}
                 <img src="{{ image.image.url }}" alt="{{ image.description }}" class="recipe-image">

@@ -5,14 +5,18 @@
 
 {% block content %}
     <a href="{% url 'ledger:add_recipe' %}" class="btn">Add New Recipe</a>
-    
+
     {% if recipes %}
         <ul>
             {% for recipe in recipes %}
                 <li class="recipe-item">
                     <div class="recipe-info">
                         <h3>{{ recipe.name }}</h3>  <!-- ✅ Bigger and bold recipe name -->
-                        <p class="author-name"><strong>By:</strong> {{ recipe.author.profile.name }}</p> <!-- ✅ Author below -->
+                        {% if recipe.author.profile.name %}
+                            <p class="author-name"><strong>By:</strong> {{ recipe.author.profile.name }}</p>
+                        {% else %}
+                            <p class="author-name"><strong>By:</strong> {{ recipe.author.username }}</p>
+                        {% endif %}
                     </div>
 
                     <div class="view-button">
