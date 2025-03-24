@@ -13,11 +13,21 @@
 
     {% load tz %} 
 
-    <!-- Created and Updated Time (formatted properly) -->
+    <!-- Created and Updated Time -->
     <div class="time-info">
         <p><strong>Created on:</strong> {% timezone "Asia/Manila" %}{{ recipe.created_on|date:"F j, Y g:i A" }}{% endtimezone %}</p>
         <p><strong>Updated on:</strong> {% timezone "Asia/Manila" %}{{ recipe.updated_on|date:"F j, Y g:i A" }}{% endtimezone %}</p>
     </div>
+
+    <!-- Display Recipe Images -->
+    {% if recipe.images.all %}
+        <h3>Recipe Images</h3>
+        <div class="image-gallery">
+            {% for image in recipe.images.all %}
+                <img src="{{ image.image.url }}" alt="{{ image.description }}" class="recipe-image">
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <!-- Two-column layout for Ingredients & Quantity -->
     <div class="ingredient-container">
@@ -42,8 +52,11 @@
         </div>
     </div>
 
-    <!-- Back to Recipes Button -->
-    <a href="{% url 'ledger:recipe_list' %}" class="btn">Back to Recipes</a>
+    <!-- Buttons for Uploading Image and Navigation -->
+    <div class="button-container">
+        <a href="{% url 'ledger:add_image' recipe.id %}" class="btn upload-btn">Upload Image</a>
+        <a href="{% url 'ledger:recipe_list' %}" class="btn">Back to Recipes</a>
+    </div>
 
     <style>
         /* "Recipe Detail" Text Styling */
@@ -98,11 +111,32 @@
             margin-bottom: 10px;
         }
 
-        /* Button Styling */
+        /* Recipe Images Gallery */
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .recipe-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Buttons */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
         .btn {
-            display: block;
-            width: fit-content;
-            margin: 20px auto;
+            display: inline-block;
             background: #007bff;
             color: white;
             padding: 10px 15px;
@@ -115,6 +149,14 @@
 
         .btn:hover {
             background: #0056b3;
+        }
+
+        .upload-btn {
+            background: #28a745;
+        }
+
+        .upload-btn:hover {
+            background: #218838;
         }
     </style>
 
