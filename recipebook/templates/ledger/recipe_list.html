@@ -4,6 +4,8 @@
 {% block page_title %}Recipe List{% endblock %}
 
 {% block content %}
+    <a href="{% url 'ledger:add_recipe' %}" class="btn">Add New Recipe</a>
+    
     {% if recipes %}
         <ul>
             {% for recipe in recipes %}
