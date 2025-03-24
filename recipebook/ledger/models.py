@@ -12,7 +12,7 @@ class Ingredient(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=200)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipes")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipes", null=True)
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     updated_on = models.DateTimeField(auto_now=True, null=True)
 
@@ -39,3 +39,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class RecipeImage(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="recipe_images/")
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Image for {self.recipe.name}"
