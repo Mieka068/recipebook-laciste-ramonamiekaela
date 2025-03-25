@@ -20,24 +20,14 @@
             {% endfor %}
         </div>
 
-        <button type="button" id="add-ingredient-btn" class="btn">Add Another Ingredient</button>
+        <!-- ✅ "Add Another Ingredient" button increases ingredient fields -->
+        <a href="?extra={{ ingredient_formset.total_form_count|add:1 }}" class="btn">Add Another Ingredient</a>
+
+        <!-- ✅ "Save Recipe" button submits all fields -->
         <button type="submit" class="btn">Save Recipe</button>
     </form>
 
     <a href="{% url 'ledger:recipe_list' %}" class="btn">Back to Recipe List</a>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let formIdx = {{ ingredient_formset.total_form_count }};
-            document.getElementById("add-ingredient-btn").addEventListener("click", function() {
-                let newForm = document.querySelectorAll(".ingredient-form")[0].cloneNode(true);
-                let regex = new RegExp("-" + (formIdx - 1) + "-", "g");
-                newForm.innerHTML = newForm.innerHTML.replace(regex, "-" + formIdx + "-");
-                document.getElementById("ingredient-forms").appendChild(newForm);
-                formIdx++;
-            });
-        });
-    </script>
 
     <style>
         form {
