@@ -11,20 +11,24 @@
         {{ form.as_p }}
 
         <h3>Ingredients</h3>
-        {{ ingredient_formset.management_form }}
-        <div id="ingredient-forms">
-            {% for form in ingredient_formset %}
-                <div class="ingredient-form">
-                    {{ form.as_p }}
-                </div>
+
+        <label for="new_ingredient">Ingredient:</label>
+        <input type="text" name="new_ingredient" required>
+
+        <label for="quantity">Quantity:</label>
+        <input type="text" name="quantity" required>
+
+        <button type="submit" name="add_ingredient" class="btn">Add Another Ingredient</button>
+
+        <ul>
+            {% for ingredient in entered_ingredients %}
+                <li>{{ ingredient }}</li>
+            {% empty %}
+                <li>No ingredients added yet.</li>
             {% endfor %}
-        </div>
+        </ul>
 
-        <!-- ✅ "Add Another Ingredient" button increases ingredient fields -->
-        <a href="?extra={{ ingredient_formset.total_form_count|add:1 }}" class="btn">Add Another Ingredient</a>
-
-        <!-- ✅ "Save Recipe" button submits all fields -->
-        <button type="submit" class="btn">Save Recipe</button>
+        <button type="submit" name="save_recipe" class="btn">Save Recipe</button>
     </form>
 
     <a href="{% url 'ledger:recipe_list' %}" class="btn">Back to Recipe List</a>
@@ -36,13 +40,6 @@
             gap: 10px;
             width: 50%;
             margin: auto;
-        }
-
-        .ingredient-form {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
         }
 
         h3 {

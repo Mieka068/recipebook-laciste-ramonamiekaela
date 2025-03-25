@@ -8,7 +8,7 @@ class RecipeForm(forms.ModelForm):
         fields = ["name"]
 
 
-class RecipeImageForm(forms.ModelForm):  # ✅ Make sure this exists!
+class RecipeImageForm(forms.ModelForm): 
     class Meta:
         model = RecipeImage
         fields = ["image", "description"]

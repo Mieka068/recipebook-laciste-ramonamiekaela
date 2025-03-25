@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, View
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeImage
 from .forms import RecipeForm, RecipeIngredientForm, RecipeImageForm, inlineformset_factory
 
@@ -22,46 +22,46 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Get extra fields count from GET request (default: 1)
-        extra_fields = int(self.request.GET.get("extra", 1))  
-
-        # ✅ Set `extra` when creating the formset factory
-        RecipeIngredientFormSetDynamic = inlineformset_factory(
-            Recipe, RecipeIngredient, form=RecipeIngredientForm, extra=extra_fields, can_delete=True
-        )
-
-        if self.request.POST:
-            context["ingredient_formset"] = RecipeIngredientFormSetDynamic(self.request.POST)
-        else:
-            context["ingredient_formset"] = RecipeIngredientFormSetDynamic()
-
+        
+        context["entered_ingredients"] = self.request.session.get("entered_ingredients", [])
+        
         return context
 
-    def form_valid(self, form):
-        context = self.get_context_data()
-        ingredient_formset = context["ingredient_formset"]
-        form.instance.author = self.request.user  
+    def post(self, request, *args, **kwargs):
+        """Handles both adding ingredients and final saving of the recipe"""
+        form = self.get_form()
 
-        if form.is_valid() and ingredient_formset.is_valid():
-            self.object = form.save()
-            ingredient_formset.instance = self.object
+        if "add_ingredient" in request.POST:
+            ingredient_name = request.POST.get("new_ingredient")
+            quantity = request.POST.get("quantity")
 
-            for ingredient_form in ingredient_formset:
-                if ingredient_form.cleaned_data:
-                    new_ingredient_name = ingredient_form.cleaned_data.get("new_ingredient")
+            if ingredient_name and quantity:
+                # Store ingredients temporarily in session
+                entered_ingredients = request.session.get("entered_ingredients", [])
+                entered_ingredients.append(f"{ingredient_name} - {quantity}")
+                request.session["entered_ingredients"] = entered_ingredients
+                request.session.modified = True  # Mark session as changed
+                
+            return redirect("ledger:add_recipe")  # Stay on the same page
+        
+        elif form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.author = request.user  
+            recipe.save()
 
-                    if new_ingredient_name:
-                        new_ingredient, _ = Ingredient.objects.get_or_create(name=new_ingredient_name)
-                        ingredient_form.instance.ingredient = new_ingredient
+            # Save entered ingredients to the database
+            entered_ingredients = request.session.get("entered_ingredients", [])
+            for entry in entered_ingredients:
+                ingredient_name, quantity = entry.split(" - ")
+                ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
+                RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity)
 
-            ingredient_formset.save()
+            # Clear session data
+            request.session["entered_ingredients"] = []
+
             return redirect("ledger:recipe_list")
-        else:
-            return self.form_invalid(form)
 
-
-
+        return self.form_invalid(form)
 
 
 class AddImageView(CreateView):
