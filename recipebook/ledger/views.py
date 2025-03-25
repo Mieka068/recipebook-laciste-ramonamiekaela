@@ -23,6 +23,7 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
+        context["entered_recipe_name"] = self.request.session.get("entered_recipe_name", "")
         context["entered_ingredients"] = self.request.session.get("entered_ingredients", [])
         
         return context
@@ -32,9 +33,13 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         form = self.get_form()
 
         if "add_ingredient" in request.POST:
+            recipe_name = request.POST.get("name")
             ingredient_name = request.POST.get("new_ingredient")
             quantity = request.POST.get("quantity")
 
+            if recipe_name:
+                request.session["entered_recipe_name"] = recipe_name
+            
             if ingredient_name and quantity:
                 # Store ingredients temporarily in session
                 entered_ingredients = request.session.get("entered_ingredients", [])
@@ -49,8 +54,15 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
             recipe.author = request.user  
             recipe.save()
 
+            # Add last entered ingredient before saving
+            ingredient_name = request.POST.get("new_ingredient")
+            quantity = request.POST.get("quantity")
+            if ingredient_name and quantity:
+                entered_ingredients = request.session.get("entered_ingredients", [])
+                entered_ingredients.append(f"{ingredient_name} - {quantity}")
+                request.session["entered_ingredients"] = entered_ingredients
+
             # Save entered ingredients to the database
-            entered_ingredients = request.session.get("entered_ingredients", [])
             for entry in entered_ingredients:
                 ingredient_name, quantity = entry.split(" - ")
                 ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
@@ -58,6 +70,7 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
 
             # Clear session data
             request.session["entered_ingredients"] = []
+            request.session["entered_recipe_name"] = ""
 
             return redirect("ledger:recipe_list")
 

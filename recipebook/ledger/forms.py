@@ -20,6 +20,7 @@ class RecipeIngredientForm(forms.ModelForm):
         label="Or create a new ingredient"
     )
 
+
     class Meta:
         model = RecipeIngredient
         fields = ["ingredient", "quantity"]

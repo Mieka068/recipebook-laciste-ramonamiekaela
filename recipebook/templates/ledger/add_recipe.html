@@ -8,7 +8,8 @@
         {% csrf_token %}
         
         <!-- Recipe Name Form -->
-        {{ form.as_p }}
+        <label for="name">Recipe Name:</label>
+        <input type="text" name="name" required value="{{ entered_recipe_name }}">
 
         <h3>Ingredients</h3>
 
