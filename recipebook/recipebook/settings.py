@@ -28,6 +28,11 @@ USE_TZ = True
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# MEDIA CONFIGURATION
+MEDIA_ROOT = BASE_DIR / "media"  # Where uploaded images are stored
+MEDIA_URL = "/media/"  # URL prefix for media files
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -44,6 +49,7 @@ ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = "/recipes/list/"  # Redirect to recipe list after login
 LOGOUT_REDIRECT_URL = "/accounts/login/"  # Redirect to login page after logout
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

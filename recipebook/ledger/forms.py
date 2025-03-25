@@ -2,6 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory
 from .models import Recipe, RecipeImage, RecipeIngredient, Ingredient
 
+
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe

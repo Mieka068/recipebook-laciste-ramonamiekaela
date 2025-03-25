@@ -2,9 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, View
+from django.views.generic import CreateView
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeImage
-from .forms import RecipeForm, RecipeIngredientForm, RecipeImageForm, inlineformset_factory
+from .forms import RecipeForm, RecipeIngredientForm, RecipeImageForm
 
 def recipe_list(request):
     recipes = Recipe.objects.all()
@@ -14,6 +14,7 @@ def recipe_list(request):
 def recipe_detail(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     return render(request, "ledger/recipe_detail.html", {"recipe": recipe})
+
 
 class AddRecipeView(LoginRequiredMixin, CreateView):
     model = Recipe
@@ -88,7 +89,7 @@ class AddImageView(CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["recipe"] = get_object_or_404(Recipe, id=self.kwargs["recipe_id"])  # ✅ Pass recipe to the template
+        context["recipe"] = get_object_or_404(Recipe, id=self.kwargs["recipe_id"])  
         return context
 
     def get_success_url(self):
